@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <!-- <input type="radio" v-model="pick" value="html" id="html">
+        <label for="html">HTML</label>
+        <br>
+        <input type="radio" v-model="pick" value="js" id="js">
+        <label for="js">JS</label>
+        <br> -->
+        <input type="checkbox" v-model="pick" value="html"  id="html">
+        <label for="html">HTML</label>
+        <br>
+        <input type="checkbox" v-model="pick" value="js"  id="js">
+        <label for="js">JS</label>
+        <br>
+        <input type="checkbox" v-model="pick" value="css" id="css">
+        <label for="css">CSS</label>
+        <br>
+        <input type="checkbox" v-model="toggle" :true-value="value1" :false-value="value2">
+        <label for=""> 复选框 {{ toggle }}</label>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            pick:['js'],
+            toggle:"",
+            value1 :'a',
+            value2:'b'
+        }
+    })
+    
+</script>
+</html>

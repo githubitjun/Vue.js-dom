@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        {{ reversedText }}
+        <button @click="addPakeage">点我加pakeage</button>
+        总值:{{ price }}
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            text:'123,456',
+            pakeage :[
+                {name:'一号',count:10},
+                {name:'二号',count:20},
+                {name:'三号',count:30},
+            ]
+        },
+
+        methods: {
+            addPakeage (){
+                this.pakeage.push({name:'一号',count:1})
+            }
+        },
+        computed:{
+            reversedText:function(){
+                return this.text.split(',').reverse().join()
+            },
+            price:function(){
+                var price = 0
+                for(var i =0;i < this.pakeage.length;i++){
+                    price += this.pakeage[i].count
+                }
+                return price
+            }
+        },
+    })
+
+</script>
+</html>
