@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        .tabs {
+            font-size : 14px ; 
+            color : #657180 ; 
+        }
+        .tabs-bar:after {
+            content :"";
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: #d7dde4;
+            margin-top: -1px;
+        }
+
+        .tabs-tab {
+            display: inline-block;
+            padding: 4px 16px;
+            margin-right: 6px;
+            background: #FFF;
+            border: 1px solid #d7dde4;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tabs-tab-active {
+            color: #3399ff;
+            border-top: 1px solid #3399ff;
+            border-bottom: 1px solid #fff;
+        }
+
+        .tabs-tab-active:before{
+            content: '';
+            display: block;
+            height: 1px;
+            background: #3399ff;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .tabs-content {
+            padding: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <tabs v-model="activeKey">
+            <pane label="标签一" name="1">
+                标签一的内容
+            </pane>
+            <pane label="标签二" name="2">
+                标签二的内容
+            </pane>
+            <pane label="标签三" name="3">
+                标签三的内容
+            </pane>
+        </tabs>
+    </div>
+</body>
+
+<script type="text/x-template" id="my-tabs">
+    <div class="tabs">
+        <div class="tabs-bar">
+            <div :class="tabCls(item)" v-for="(item,index) in navList" @click="handleChange(index)">
+                {{ item.label }}
+            </div>
+        </div>
+        <div class="tabs-content">
+            <slot></slot>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="my-pane">
+    <div class="pane" v-show="show">
+        <slot></slot>
+    </div>
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+      Vue.component('pane', {
+        name:'pane',
+        template: '#my-pane',
+        data() {
+            return {
+                show: true
+            }
+        },
+        props:{
+            name:{
+                type:String
+            },
+            label:{
+                type:String,
+                default:''
+            }
+        },
+        methods: {
+            updateNav(){
+                this.$parent.updateNav()
+            }
+        },
+        watch: {
+            "label":function(){
+                this.updateNav()
+            }
+        },
+        mounted() {
+            this.updateNav()
+        },
+    })
+
+    Vue.component('tabs', {
+        template: "#my-tabs",
+        props:{
+            value:{
+                type:[String,Number]
+            }
+        },
+        data() {
+            return {
+                currentValue:this.value,
+                navList:[]
+            }
+        },
+        methods: {
+            tabCls(item){
+                return [
+                    'tabs-tab',{
+                        'tabs-tab-active':item.name === this.currentValue
+                    }
+                ]
+            },
+            getTabs(){
+                return this.$children.filter(function(item){
+                    return item.$options.name === 'pane'
+                })
+            },
+            updateNav(){
+                this.navList = []
+                var _this = this 
+                console.log(this.getTabs());
+                this.getTabs().forEach(function(pane,index){
+                    // console.log(pane.name);
+                    // console.log(index);
+                    _this.navList.push({
+                        label:pane.label,
+                        name:pane.name || index
+                    })
+                    // debugger
+                    // console.log(!pane.name);
+                    if (!pane.name) {
+                        pane.name = index;
+                    }
+                    if (index === 0) {
+                        // console.log(!_this.currentValue);
+                        if (!_this.currentValue) {
+                            _this.currentValue = pane.name ||　index
+                        }
+                    }
+           
+                })
+                // console.log(this.navList);
+                this.updateStatus()
+            },
+            updateStatus(){
+                var tabs = this.getTabs()
+                var _this = this 
+                tabs.forEach(function(tab){
+                    return tab.show = tab.name === _this.currentValue;
+                })
+            },
+            handleChange(index){
+                // console.log('111');
+                var nav = this.navList[index]
+                var name  = nav.name
+                this.currentValue = name;
+                this.$emit('input',name);
+                // this.$emit('on-click',name)
+            }
+        },
+        watch:{
+            "value":function(val){
+                this.currentValue = val;
+            },
+            "currentValue":function(){
+                this.updateStatus();
+            }
+        }
+    })
+
+  
+
+    var app = new Vue({
+        el: "#app",
+        data:{
+            activeKey:'1'
+        }
+    })
+
+</script>
+
+</html>
