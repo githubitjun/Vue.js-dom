@@ -8,21 +8,21 @@
 </head>
 <body>
     <div id="app">
-        <my-component :message="[1,2,3]"></my-component>
+        <input type="text" v-focus>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
-    Vue.component('my-component',{
-        template:'<div>{{message.length}}</div>',
-        props:['message'],
-        mounted() {
-            console.log(this.message);  
-        },
+    Vue.directive('focus',{
+        inserted:function(el){
+            el.focus()
+        }
     })
     var app = new Vue({
         el:"#app",
 
     })
+
+
 </script>
 </html>

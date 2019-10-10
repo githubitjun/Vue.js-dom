@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        table {
+            width: 100%;
+            margin-bottom: 24px;
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+            border: 1px solid #e9e9e9;
+        }
+
+        table th {
+            background: #f7f7f7;
+            color: #5c6b77;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        table td,
+        table th {
+            padding: 8px 16px;
+            border: 1px solid #e9e9e9;
+            text-align: left;
+        }
+
+        table th a {
+            display: inline-block;
+            margin: 0 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        table th a.on {
+            color: #3399ff;
+        }
+
+        table th a:hover {
+            color: #3399ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="addData">点击新增一行</button>
+        <v-table :columns="columns" :data="data"></v-table>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<script type="text/x-template" id="my-template">
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th v-for="(item,index) in tableColumns">
+                        <span>{{ item.title }}</span>
+                        <span v-if="item.sortable ">
+                                
+                                <a href="#" :class="{ 'on' : item._columnsStatus === 'asc' }" @click="ascend(index)">↑</a>
+                                <a href="#" :class="{ 'on' : item._columnsStatus === 'desc' }" @click="descend(index)">↓</a>
+                        </span>
+                    </th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in tableData">
+                    <td> {{ item.name}}</td>
+                    <td> {{ item.age }}</td>
+                    <td> {{ item.birthday }}</td>
+                    <td> {{ item.address }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script>
+    Vue.component('v-table', {
+        template: '#my-template',
+        props: {
+            columns: {
+                type: Array,
+                default: function () {
+                    return []
+                }
+            },
+            data: {
+                type: Array,
+                default: function () {
+                    return []
+                }
+            }
+        },
+        data() {
+            return {
+                tableColumns: this.columns,
+                tableData: this.data
+            }
+        },
+        methods: {
+            getColumnsStatus() {
+                this.tableColumns.map((item, index) => {
+                    item._columnsStatus = 'normal';
+                    item._index = index
+                    return item
+                })
+            },
+            makeData() {
+                this.tableData = this.data.map(function (item, index) {
+                    item._index = index;
+                    return item
+                })
+            },
+            ascend(index) {
+                var key = this.tableColumns[index].key
+                this.tableColumns.forEach(item => {
+                    item._columnsStatus = 'normal';
+                })
+                this.tableColumns[index]._columnsStatus = 'asc'
+                this.tableData.sort((a, b) => {
+                    return a[key] > b[key] ? 1 : -1
+                })
+
+            },
+            descend(index) {
+                
+                var key = this.tableColumns[index].key
+                this.tableColumns.forEach(item => {
+                    item._columnsStatus = 'normal';
+                })
+                this.tableColumns[index]._columnsStatus = 'desc'
+                this.tableData.sort((a, b) => {
+                    return a[key] < b[key] ? 1 : -1
+                })
+
+            },
+        },
+        mounted() {
+            this.getColumnsStatus()
+        },
+        watch: {
+            "data": {
+                handler: function () {
+                    this.makeData() // 没有这句watch 将出现死循环  数据赋值时也不能直接用等号= 直接用等号的话只是把数组的地址赋值,就会出现死循环
+                    // this.tableData = this.data.concat() 
+                    var listNew = this.tableColumns.filter(item => {
+                        return item._columnsStatus !== 'normal'
+                    })
+                    console.log(listNew);
+                    if (listNew.length > 0) {
+                        if (listNew[0]._columnsStatus === 'asc') {
+                            console.log('111');
+                            this.ascend(listNew[0]._index)
+                        } else {
+                            console.log(22);
+                            this.descend(listNew[0]._index)
+                        }
+                    }
+                },
+               
+            }
+        },
+    })
+
+    var app = new Vue({
+        el: "#app",
+        data: {
+            columns: [
+                {
+                    title: '姓名',
+                    key: 'name'
+                },
+                {
+                    title: '年龄',
+                    key: 'age',
+                    sortable: true
+                },
+                {
+                    title: '出生日期',
+                    key: 'birthday',
+                    sortable: true
+                },
+                {
+                    title: '地址',
+                    key: 'address'
+                },
+
+            ],
+            data: [
+                {
+                    name: '王小明',
+                    age: 18,
+                    birthday: '1997-02-21',
+                    address: '北京市朝阳区'
+                },
+                {
+                    name: '张小刚',
+                    age: 25,
+                    birthday: '2008-02-21',
+                    address: '北京市朝阳区'
+                },
+                {
+                    name: '李小红',
+                    age: 30,
+                    birthday: '2000-02-21',
+                    address: '北京市朝阳区'
+                },
+                {
+                    name: '周小伟',
+                    age: 26,
+                    birthday: '1999-03-21',
+                    address: '北京市朝阳区'
+                },
+            ]
+        },
+        methods: {
+            addData() {
+                this.data.push(
+                    {
+                        name: '刘小天',
+                        age: 19,
+                        birthday: '1998-02-21',
+                        address: '北京市朝阳区'
+                    }
+                )
+            }
+        },
+    })
+</script>
+
+</html>

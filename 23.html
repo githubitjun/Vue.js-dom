@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <ele>
+                
+        </ele>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    Vue.component('ele',{
+        render:function(createElement){
+            if (this.$slots.default === undefined) {
+                return createElement('div','这是没有使用slot要显示的文本')
+            }else{
+                return createElement('div',this.$slots.default)
+            }
+        },
+       
+        created() {
+            console.log(this.$slots.default);
+        },
+    })
+    var app = new Vue({
+        el:"#app"
+    })
+
+</script>
+</html>

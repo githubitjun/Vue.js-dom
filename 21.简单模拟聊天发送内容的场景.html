@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <ele></ele>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    Vue.component('ele',{
+        render:function(createElement){
+            var _this = this 
+            if (this.list.length) {
+                var listNode = createElement('ul',this.list.map(function(item){
+                    return createElement('li',item)
+                }))
+            }else {
+                var listNode = createElement('p','暂无聊天内容')
+            }
+            return createElement('div',[
+                listNode,
+                createElement('input',{
+                    attr:{
+                        placeholder:'输入内容,按回车键发送'
+                    },
+                    style:{
+                        width:'200px'
+                    },
+                    on:{
+                        keyup:function(event){
+                            if (event.keyCode !== 13) {
+                                return
+                            }
+                            _this.list.push(event.target.value)
+                            event.target.value = ''
+                        }
+                    }
+                })
+            ])
+        },
+        data() {
+            return {
+                value:'',
+                list:[]
+            }
+        },
+    })
+    var app = new Vue({
+        el:"#app"
+    })
+
+</script>
+</html>

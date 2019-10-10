@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <ele>
+            <span>又加一个</span>
+            <p slot="header">这是一个寂寞的天</p>
+            <p slot="footer">下着有些伤心的雨</p>
+            <p>这是没人要的p1</p>
+            <p>这是没人要的p2</p>
+            <template slot-scope="scope">
+                {{ scope.row }}
+            </template>
+        </ele>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    Vue.component('ele',{
+        template:`<span>
+            <slot name="header"></slot>
+            <slot></slot>
+            <slot name="footer"></slot>
+            <slot :row="name"></slot>
+        </span>`,
+        data() {
+            return {
+                name:'张三'
+            }
+        },
+        created() {
+            console.log(this.$slots);
+        },
+    })
+
+    var app = new Vue({
+        el:"#app",
+        created() {
+            
+        },
+    })
+
+</script>
+</html>
