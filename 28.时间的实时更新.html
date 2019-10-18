@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ time }}
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            time:''
+        },
+        methods: {
+            getTime() {
+                setInterval( () => {
+                    this.time = new Date()
+                    var year = this.time.getFullYear() // 获取年
+                    var month = this.time.getMonth() + 1  // 获取月
+                    var date = this.time.getDate()  // 获取日
+                    var hours = this.time.getHours() //小时
+                    var min = this.time.getMinutes() // 分钟
+                    var sec = this.time.getSeconds() //  秒数
+                    if(month < 10 ){
+                        month = '0' + month
+                    }
+                    if(date < 10 ){
+                        date = '0' + date
+                    }
+                    if(hours < 10 ){
+                        hours = '0' + hours
+                    }
+                    if(min < 10 ){
+                        min = '0' + min
+                    }
+                    if(sec < 10 ){
+                        sec = '0' + sec
+                    }
+                    var newTime = year + '-' + month + '-' + date + '  ' + hours + ':' + min + ":" + sec
+                    this.time = newTime
+                }, 1000)
+            }
+        },
+        mounted() {
+            this.getTime()
+        },
+    })
+
+
+
+
+</script>
+
+</html>
